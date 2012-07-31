@@ -29,10 +29,8 @@
         <form action="../controllers/login/LoginController.php" method="post">
             <label for="usr">Usuario: </label> 
             <input type="text" name="login[usr]" id="usr" /> 
-            
             <label for="pwd">Contraseña: </label>
             <input type="password" name="login[pwd]" id="pwd" /> 
-            
             <label for="pwd">País: </label>
             <select name="login[pais]" id="pais">
                 <option value="0">Seleccionar..</option>
