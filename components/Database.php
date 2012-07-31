@@ -5,7 +5,7 @@ class DataBase {
   private $conexion;
   private $resource;
   private $sql;
-  public static $queries;
+  public $queries;
   private static $_singleton;
 
   public static function getInstance(){
@@ -18,8 +18,8 @@ class DataBase {
 
   private function __construct(){
 
-    $this->conexion = @mysql_connect("localhost", "tecno_taedcmn", "QC6u@C-OON3u");
-    mysql_select_db("tecno_orders", $this->conexion);
+    $this->conexion = @mysql_connect("localhost", "root", "admin");
+    mysql_select_db("mudis", $this->conexion);
     $this->queries = 0;
     $this->resource = null;
 
