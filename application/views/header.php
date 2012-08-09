@@ -8,10 +8,8 @@
 <!--<![endif]-->
 <head>
 <meta charset="utf-8">
-<!-- Use the .htaccess and remove these lines to avoid edge case issues.
-       More info: h5bp.com/i/378 -->
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title>Login</title>
+<title><?php echo $title ?></title>
 <meta name="description" content="">
 <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -19,27 +17,7 @@
 <!-- Mobile viewport optimized: h5bp.com/viewport -->
 <meta name="viewport" content="width=device-width">
 <link rel="stylesheet" href="../css/style.css">
-<link rel="stylesheet" href="../css/login.css">
 <!-- More ideas for your <head> here: h5bp.com/d/head-Tips -->
 <script src="../js/libraries/modernizr-2.5.3.min.js"></script>
 </head>
 <body>
-    <header></header>
-    <section>
-        <form action="../controllers/login/LoginController.php" method="post">
-            <label for="usr">Usuario: </label> 
-            <input type="text" name="login[usr]" id="usr" /> 
-            <label for="pwd">Contraseña: </label>
-            <input type="password" name="login[pwd]" id="pwd" /> 
-            <label for="pwd">País: </label>
-            <select name="login[pais]" id="pais">
-                <option value="0">Seleccionar..</option>
-                <option value="1">México</option>
-            </select>
-            
-            <input type="submit" name="entrar" value="Entrar" />
-        </form>
-    </section>
-    <footer> </footer>
-</body>
-</html>

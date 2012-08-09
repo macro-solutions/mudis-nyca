@@ -1,5 +1,4 @@
 <?php
-include '../../components/Database.php';
 class Session {
 
   private $usr;
@@ -8,18 +7,18 @@ class Session {
   public $session;
 
   function __construct($usr = "",$pwd = "",$pais = ""){
+    session_start();
     if($usr && $pwd && $pais){
       $this->usr   = $usr;
       $this->pwd   = md5($pwd);
       $this->pais  = $pais;
       $this->loginCheck();
-    }else{
-      $this->sessionCheck();
     }
+    $this->sessionCheck();
   }
 
   private function loginCheck(){
-    $db = DataBase::getInstance();
+    $db = MySql::getInstance();
     $sql = "SELECT CONCAT(nombre,' ',aPaterno,' ',aMaterno) as nombre,
     								usuario,
     								password,
@@ -35,21 +34,26 @@ class Session {
                 and p.idPais = $this->pais";
     $db->setQuery($sql);
     $datos = $db->loadObject();
-    if($datos->usuario === $this->usr && $datos->password === $this->pwd && $datos->idPais === $this->pais){
-      session_start();
-      $_SESSION['user'] = $datos;
-      $this->session = true;
+    if($datos){
+      if($datos->usuario === $this->usr && $datos->password === $this->pwd && $datos->idPais === $this->pais){
+        unset($datos->password);
+        $_SESSION['user'] = $datos;
+        $this->session = true;
+      }else{
+        $this->session = false;
+      }
     }else{
       $this->session = false;
     }
   }
-  
+
   private function sessionCheck(){
-    if(isset($_SESSION)){
+    if(isset($_SESSION['user'])){
       $this->session = true;
     }else{
       $this->session = false;
+      session_destroy();
+      //header('location: ../../login/?e=1');
     }
   }
 }
-?>

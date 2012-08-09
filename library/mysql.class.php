@@ -1,6 +1,6 @@
 <?php
 
-class DataBase {
+class MySql {
 
   private $conexion;
   private $resource;
@@ -11,15 +11,15 @@ class DataBase {
   public static function getInstance(){
 
     if (is_null (self::$_singleton)) {
-      self::$_singleton = new DataBase();
+      self::$_singleton = new MySql();
     }
     return self::$_singleton;
   }
 
   private function __construct(){
 
-    $this->conexion = @mysql_connect("localhost", "root", "admin");
-    mysql_select_db("mudis", $this->conexion);
+    $this->conexion = @mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
+    mysql_select_db(DB_NAME, $this->conexion);
     $this->queries = 0;
     $this->resource = null;
 
@@ -89,5 +89,3 @@ class DataBase {
     @mysql_close($this->conexion);
   }
 }
-
-?>
