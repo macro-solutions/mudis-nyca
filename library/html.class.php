@@ -1,6 +1,6 @@
 <?php
 
-class HTML {
+class Html {
 	private $js = array();
 
 	function shortenUrls($data) {

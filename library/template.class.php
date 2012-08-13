@@ -19,8 +19,6 @@ class Template {
   /** Display Template **/
 
   function render($fullRender = true) {
-
-    $html = new HTML;
     extract($this->variables);
 
     if ($fullRender) {
