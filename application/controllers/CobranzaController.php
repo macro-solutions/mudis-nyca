@@ -5,4 +5,8 @@ class CobranzaController extends Controller{
     $this->set('title','Mudis Nyca CRM - Cobranza',false);
     $this->set('mail',$mail,false);
   }
+  
+  function collector(){
+    
+  }
 }
