@@ -9,7 +9,7 @@ class Cobranza{
     foreach (self::$emails->mails as $messageNum=>$message) {
       if (strrpos(strtolower($message->subject),'tus datos de compra (') === 0) {
         $parsedEmail = self::parseEmail($messageNum,$message);
-        $order[] =self::readEmail($parsedEmail);
+        $order[] = self::readEmail($parsedEmail);
       }
     }
     return $order;
@@ -48,11 +48,15 @@ class Cobranza{
 
   private static function readEmail($parsedEmail){
     $order = array();
+    $producto = array();
+
     $html = new simple_html_dom();
 
     $html->load($parsedEmail);
     $buyerData = $html->find('th[style=font-weight:normal; color:#6D6D6D;]');
     $shippingData = $html->find('tr[style=font-size:11px; font-family:Arial; color:#212121; font-weight:bold;] th[!width]');
+    $products = self::buildProducts($html->find('table[bgcolor=#F8F8F8]')); //lista impar
+    $products = self::buildProducts($html->find('table[bgcolor=#FFFFFF]'),$products); //lista par
     $order = array(
       'nombre'=>$buyerData[0]->plaintext,
       'apellidos'=>$buyerData[1]->plaintext,
@@ -65,10 +69,22 @@ class Cobranza{
     	'telefono'=>$buyerData[0]->plaintext,
     	'formaPago'=>$shippingData[0]->plaintext,
     	'envio'=>$shippingData[1]->plaintext,
-    	'total'=>trim($message = str_replace(MONEDA, '',$html->find('table[height=50] tbody tr td',1)->plaintext)),
-    	'detallePedido'=>array()
+    	'total'=>trim($message = str_replace(MONEDA,'',$html->find('table[height=50] tbody tr td',1)->plaintext)),
+    	'productos'=>$products
     );
     return $order;
+  }
+
+  private static function buildProducts($html,$products = array()){
+    foreach($html as $el){
+      $data['modelo'] = $el->find('tr td',0)->find('span',0)->plaintext;
+      $data['dispositivo'] = str_replace('Dispositivo: ', '',$el->find('tr td',0)->find('p',0)->plaintext);
+      $data['cantidad'] =  str_replace('Cantidad: ', '',$el->find('tr td',1)->find('span',0)->plaintext);
+      $data['precio'] =  trim($message = str_replace(array(MONEDA,'Subtotal: '), '',$el->find('tr td',1)->find('span',1)->plaintext));
+      $products[] = $data;
+    }
+    
+    return $products;
   }
 
 }
