@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="../css/login.css"> 
 <header></header>
 <section>
-    <form action="<?php echo BASE_PATH ?>/login/login" method="post">
+    <form action="" method="post">
         <label for="usr">Usuario: </label> 
         <input type="text" name="login[usr]" id="usr" /> 
         <label for="pwd">Contraseña: </label>

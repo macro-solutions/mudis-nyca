@@ -9,7 +9,7 @@ class LoginController extends Controller{
 
       $session = new Session($usr,$pwd,$pais);
       if($session->session && $_SESSION['user']){
-        header('location: ' . BASE_PATH . '/cobranza/admin');
+        header('Location: ../cobranza/admin');
         exit;
       }else{
         $this->set('error','Usuario y/o Contraseña Incorrectos');
