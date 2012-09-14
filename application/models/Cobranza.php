@@ -6,12 +6,12 @@
  */
 class Cobranza
 {
-  
-/**
- * 
- * Lee y extrae la información de todos los correos de pedidos existentes en el servidor
- * @return array() Todos los correos existentes formateados en un array 
- */
+
+  /**
+   *
+   * Lee y extrae la información de todos los correos de pedidos existentes en el servidor
+   * @return array() Todos los correos existentes formateados en un array
+   */
   public static function getEmails(){
     $emails = new Email();
 
@@ -23,13 +23,97 @@ class Cobranza
     }
     return $order;
   }
-  
-/**
- * 
- * Lee el contenido de cada correo, elimina contendio innecesario y le da un formato adecuado al HTML
- * @param object $message Correo individual para ser parseado
- * @return string $parsedEmail Contenido de correo en formato HTML
- */
+
+  public static function insert(){
+    $db = MySql::getInstance();
+    $sql = "INSERT INTO `formaspago`
+          (`idFormaPago`,
+          `formaPago`)
+          VALUES
+          (1,
+          'Dinero Mail'
+          )";
+    $db->setQuery($sql);
+    $db->alter();
+    $sql = "select * from formaspago";
+    $db->setQuery($sql);
+    return $db->loadObjectList();
+  }
+
+  public static function savePedidos($mails){
+    $db = MySql::getInstance();
+    $formasEnvio = array('Gratis por Mexpost'=>1);
+    $formasPago = array('DineroMail'=>1);
+    foreach($mails as $mail){
+      $sql =	"INSERT INTO `pedidos` ("
+      .  "`idPais`,"
+      .  "`idFormaPago`,"
+      .  "`idFormaEnvio`,"
+      .  "`nombreComprador`,"
+      .  "`apellidoComprador`,"
+      .  "`emailComprador`,"
+      .  "`direccion`,"
+      .  "`ciudad`,"
+      .  "`region`,"
+      .  "`provincia`,"
+      .  "`totalProductos`,"
+      .  "`totalPedido`"
+      .  " )"
+      .  " VALUES "
+      .  "( "
+      .  "1,"
+      .  $formasPago[$mail['formaPago']]. ","
+      .  $formasEnvio[$mail['formaEnvio']]. ","
+      .  "'" . $mail['nombre']. "',"
+      .  "'" . $mail['apellidos']. "',"
+      .  "'" . $mail['email']. "',"
+      .  "'" . $mail['direccion']. "',"
+      .  "'" . $mail['ciudad']. "',"
+      .  "'" . $mail['region']. "',"
+      .  "'" . $mail['provincia']. "',"
+      .  "'" . count($mail['productos']) . "',"
+      .  "'" . $mail['total']. "'"
+      .  ")";
+
+      $db->setQuery($sql);
+
+      if($db->alter()){
+        $db->setQuery("SELECT LAST_INSERT_ID() as idPedido");
+        $id = $db->loadObject();
+        foreach($mail['productos'] as $producto){
+          $sqlProductos = "INSERT INTO `detallespedido` ("
+          .		"`idPedido`,"
+          .		"`modelo`,"
+          .		"`dispositivo`,"
+          .		"`cantidad`,"
+          .		"`precio`"
+          .		"	) "
+          .  "VALUES ("
+          .   $id->idPedido . ","
+          .  "'" . $producto['modelo'] . "',"
+          .  "'" . $producto['dispositivo'] . "',"
+          .  (float)$producto['cantidad'] . ","
+          .  (float)$producto['precio'] . ""
+          .  ")";
+
+          $db->setQuery($sqlProductos);
+          if(!$db->alter()){
+            return false;
+          }
+        }
+      }else{
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   *
+   * Lee el contenido de cada correo, elimina contendio innecesario y le da un formato adecuado al HTML
+   * @param object $message Correo individual para ser parseado
+   * @return string $parsedEmail Contenido de correo en formato HTML
+   */
   private static function parseEmail($message){
     $message = $message->getContent();
 
@@ -61,7 +145,7 @@ class Cobranza
   }
 
   /**
-   * 
+   *
    * Lee el correo en formato HTML para la extracción de la información del pedido
    * @param string $parsedEmail correo en formato HTML
    * @return array() Información del correo con el detalle ordenado del pedido y producto
@@ -88,7 +172,7 @@ class Cobranza
     	'pais'=>$buyerData[10]->plaintext,
     	'telefono'=>$buyerData[0]->plaintext,
     	'formaPago'=>$shippingData[0]->plaintext,
-    	'envio'=>$shippingData[1]->plaintext,
+    	'formaEnvio'=>$shippingData[1]->plaintext,
     	'total'=>trim($message = str_replace(MONEDA,'',$html->find('table[height=50] tbody tr td',1)->plaintext)),
     	'productos'=>$products
     );
@@ -96,7 +180,7 @@ class Cobranza
   }
 
   /**
-   * 
+   *
    * Arma el array de productos por correo
    * @param object $html objeto de la clase Email()
    * @param array() $products Información del correo con el detalle ordenado del producto, para agregarle uno adicional
@@ -104,13 +188,20 @@ class Cobranza
    */
   private static function buildProducts($html,$products = array()){
     foreach($html as $el){
-      $data['modelo'] = $el->find('tr td',0)->find('span',0)->plaintext;
-      $data['dispositivo'] = str_replace('Dispositivo: ', '',$el->find('tr td',0)->find('p',0)->plaintext);
-      $data['cantidad'] =  str_replace('Cantidad: ', '',$el->find('tr td',1)->find('span',0)->plaintext);
-      $data['precio'] =  trim($message = str_replace(array(MONEDA,'Subtotal: '), '',$el->find('tr td',1)->find('span',1)->plaintext));
-      $products[] = $data;
+      if(strpos($el->find('tr td',0)->find('span',0)->plaintext,'Mudis personalizado para ') !== false){
+        $data['modelo'] = 'Mudis personalizado';
+        $data['dispositivo'] = str_replace('Mudis personalizado para ','',$el->find('tr td',0)->find('span',0)->plaintext);
+        $data['cantidad'] =  str_replace('Cantidad: ', '',$el->find('tr td',1)->find('span',0)->plaintext);
+        $data['precio'] =  trim($message = str_replace(array(MONEDA,'Subtotal: '), '',$el->find('tr td',1)->find('span',1)->plaintext));
+        $products[] = $data;
+      }else{
+        $data['modelo'] = $el->find('tr td',0)->find('span',0)->plaintext;
+        $data['dispositivo'] = str_replace('Dispositivo: ', '',$el->find('tr td',0)->find('p',0)->plaintext);
+        $data['cantidad'] =  str_replace('Cantidad: ', '',$el->find('tr td',1)->find('span',0)->plaintext);
+        $data['precio'] =  trim($message = str_replace(array(MONEDA,'Subtotal: '), '',$el->find('tr td',1)->find('span',1)->plaintext));
+        $products[] = $data;
+      }
     }
-
     return $products;
   }
 

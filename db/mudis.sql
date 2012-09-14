@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 31-08-2012 a las 08:21:44
+-- Tiempo de generación: 14-09-2012 a las 06:02:09
 -- Versión del servidor: 5.5.25a
 -- Versión de PHP: 5.4.4
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Base de datos: `mudis`
+-- Base de datos: `mudisemp_backend`
 --
 
 -- --------------------------------------------------------
@@ -26,7 +26,6 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `detallespedido`
 --
 
-DROP TABLE IF EXISTS `detallespedido`;
 CREATE TABLE IF NOT EXISTS `detallespedido` (
   `idDetallePedido` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `idPedido` int(11) unsigned NOT NULL,
@@ -37,7 +36,21 @@ CREATE TABLE IF NOT EXISTS `detallespedido` (
   PRIMARY KEY (`idDetallePedido`),
   UNIQUE KEY `idDetallePedido_UNIQUE` (`idDetallePedido`),
   KEY `FK_DETALLES_PEDIDOS` (`idPedido`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
+
+--
+-- Volcado de datos para la tabla `detallespedido`
+--
+
+INSERT INTO `detallespedido` (`idDetallePedido`, `idPedido`, `modelo`, `dispositivo`, `cantidad`, `precio`) VALUES
+(1, 40, 'Arte en bronce', 'Apple - .iPhone 4S', 1, 179),
+(2, 41, 'HUE1004', 'Motorola - Motorola RAZR Droid', 1, 179),
+(3, 41, 'Doodle amor', 'Motorola - .Motorola Defy', 1, 179),
+(4, 42, 'Mudis personalizado', 'Apple iPod Touch 4G', 1, 199),
+(5, 43, 'Arte en bronce', 'Apple - .iPhone 4S', 1, 179),
+(6, 44, 'HUE1004', 'Motorola - Motorola RAZR Droid', 1, 179),
+(7, 44, 'Doodle amor', 'Motorola - .Motorola Defy', 1, 179),
+(8, 45, 'Mudis personalizado', 'Apple iPod Touch 4G', 1, 199);
 
 -- --------------------------------------------------------
 
@@ -45,7 +58,6 @@ CREATE TABLE IF NOT EXISTS `detallespedido` (
 -- Estructura de tabla para la tabla `formasenvio`
 --
 
-DROP TABLE IF EXISTS `formasenvio`;
 CREATE TABLE IF NOT EXISTS `formasenvio` (
   `idFormaEnvio` tinyint(4) unsigned NOT NULL,
   `formaEnvio` varchar(45) COLLATE utf8_bin NOT NULL,
@@ -53,19 +65,32 @@ CREATE TABLE IF NOT EXISTS `formasenvio` (
   UNIQUE KEY `idFormaEnvio_UNIQUE` (`idFormaEnvio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+--
+-- Volcado de datos para la tabla `formasenvio`
+--
+
+INSERT INTO `formasenvio` (`idFormaEnvio`, `formaEnvio`) VALUES
+(1, 'Gratis por Mexpost');
+
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `formaspago`
 --
 
-DROP TABLE IF EXISTS `formaspago`;
 CREATE TABLE IF NOT EXISTS `formaspago` (
   `idFormaPago` tinyint(4) unsigned NOT NULL AUTO_INCREMENT,
   `formaPago` varchar(45) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`idFormaPago`),
   UNIQUE KEY `idFormaPago_UNIQUE` (`idFormaPago`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+
+--
+-- Volcado de datos para la tabla `formaspago`
+--
+
+INSERT INTO `formaspago` (`idFormaPago`, `formaPago`) VALUES
+(1, 'DineroMail');
 
 -- --------------------------------------------------------
 
@@ -73,7 +98,6 @@ CREATE TABLE IF NOT EXISTS `formaspago` (
 -- Estructura de tabla para la tabla `idiomas`
 --
 
-DROP TABLE IF EXISTS `idiomas`;
 CREATE TABLE IF NOT EXISTS `idiomas` (
   `idIdioma` tinyint(4) unsigned NOT NULL AUTO_INCREMENT,
   `idioma` varchar(45) NOT NULL,
@@ -95,7 +119,6 @@ INSERT INTO `idiomas` (`idIdioma`, `idioma`, `abreviacion`) VALUES
 -- Estructura de tabla para la tabla `paises`
 --
 
-DROP TABLE IF EXISTS `paises`;
 CREATE TABLE IF NOT EXISTS `paises` (
   `idPais` tinyint(4) unsigned NOT NULL AUTO_INCREMENT,
   `pais` varchar(45) NOT NULL,
@@ -118,19 +141,18 @@ INSERT INTO `paises` (`idPais`, `pais`, `abreviatura`) VALUES
 -- Estructura de tabla para la tabla `pedidos`
 --
 
-DROP TABLE IF EXISTS `pedidos`;
 CREATE TABLE IF NOT EXISTS `pedidos` (
   `idPedido` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `idPais` tinyint(4) unsigned NOT NULL,
   `idFormaPago` tinyint(4) unsigned NOT NULL,
   `idFormaEnvio` tinyint(4) unsigned NOT NULL,
-  `nombreComprador` varchar(45) COLLATE utf8_bin NOT NULL,
-  `apellidoComprador` varchar(45) COLLATE utf8_bin NOT NULL,
-  `emailComprador` varchar(45) COLLATE utf8_bin NOT NULL,
-  `direccion` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `ciudad` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `region` varchar(45) COLLATE utf8_bin DEFAULT NULL,
-  `provincia` varchar(45) COLLATE utf8_bin DEFAULT NULL,
+  `nombreComprador` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `apellidoComprador` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `emailComprador` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `direccion` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `ciudad` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `region` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `provincia` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `totalProductos` smallint(4) NOT NULL,
   `totalPedido` float(8,2) NOT NULL,
   `fechaCreacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -142,7 +164,58 @@ CREATE TABLE IF NOT EXISTS `pedidos` (
   KEY `FK_PEDIDOS_PAISES` (`idPais`),
   KEY `FK_USUARIOS_FORMASPAGO` (`idFormaPago`),
   KEY `FK_USUARIOS_FORMASENVIO` (`idFormaEnvio`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=46 ;
+
+--
+-- Volcado de datos para la tabla `pedidos`
+--
+
+INSERT INTO `pedidos` (`idPedido`, `idPais`, `idFormaPago`, `idFormaEnvio`, `nombreComprador`, `apellidoComprador`, `emailComprador`, `direccion`, `ciudad`, `region`, `provincia`, `totalProductos`, `totalPedido`, `fechaCreacion`) VALUES
+(1, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '0000-00-00 00:00:00'),
+(2, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '0000-00-00 00:00:00'),
+(3, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '0000-00-00 00:00:00'),
+(4, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '0000-00-00 00:00:00'),
+(5, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '0000-00-00 00:00:00'),
+(6, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '0000-00-00 00:00:00'),
+(7, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '0000-00-00 00:00:00'),
+(8, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '0000-00-00 00:00:00'),
+(9, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '0000-00-00 00:00:00'),
+(10, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '0000-00-00 00:00:00'),
+(11, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '0000-00-00 00:00:00'),
+(12, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '0000-00-00 00:00:00'),
+(13, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '0000-00-00 00:00:00'),
+(14, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '0000-00-00 00:00:00'),
+(15, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '0000-00-00 00:00:00'),
+(16, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '0000-00-00 00:00:00'),
+(17, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '0000-00-00 00:00:00'),
+(18, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '0000-00-00 00:00:00'),
+(19, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '0000-00-00 00:00:00'),
+(20, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '0000-00-00 00:00:00'),
+(21, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '0000-00-00 00:00:00'),
+(22, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '0000-00-00 00:00:00'),
+(23, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '0000-00-00 00:00:00'),
+(24, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '0000-00-00 00:00:00'),
+(25, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '2012-09-06 06:09:29'),
+(26, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '2012-09-06 06:09:29'),
+(27, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '2012-09-06 06:09:29'),
+(28, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '2012-09-06 06:10:04'),
+(29, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '2012-09-06 06:10:04'),
+(30, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '2012-09-06 06:10:04'),
+(31, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '2012-09-06 06:25:13'),
+(32, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '2012-09-06 06:25:13'),
+(33, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '2012-09-06 06:25:14'),
+(34, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '2012-09-06 06:25:51'),
+(35, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '2012-09-06 06:25:51'),
+(36, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '2012-09-06 06:25:51'),
+(37, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '2012-09-06 06:26:28'),
+(38, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '2012-09-06 06:26:28'),
+(39, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '2012-09-06 06:26:28'),
+(40, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '2012-09-06 06:28:06'),
+(41, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '2012-09-06 06:28:06'),
+(42, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '2012-09-06 06:28:06'),
+(43, 1, 1, 1, 'prueba', 'prueba', 'cesar_cgfg@hotmail.com', 'prueba prueba', 'prueba', 'prueba', 'prueba', 1, 179.00, '2012-09-11 19:01:00'),
+(44, 1, 1, 1, 'Fernando ', 'Dubon', 'fherduglam@hotmail.com', 'Calzada de Tlalpan #2148, Col. Campestre Chur', 'MÃ©xico D.F.', '', 'Del. CoyoacÃ¡n', 2, 358.00, '2012-09-11 19:01:00'),
+(45, 1, 1, 1, 'Ulises', 'Rodriguez', 'kenny_arkana@hotmail.com', '22 norte No. 609 interior 13 5 norte 115-b te', 'tehuacan', '', '', 1, 199.00, '2012-09-11 19:01:01');
 
 -- --------------------------------------------------------
 
@@ -150,7 +223,6 @@ CREATE TABLE IF NOT EXISTS `pedidos` (
 -- Estructura de tabla para la tabla `roles`
 --
 
-DROP TABLE IF EXISTS `roles`;
 CREATE TABLE IF NOT EXISTS `roles` (
   `idRol` tinyint(4) unsigned NOT NULL AUTO_INCREMENT,
   `rol` varchar(45) NOT NULL,
@@ -172,7 +244,6 @@ INSERT INTO `roles` (`idRol`, `rol`, `abreviacion`) VALUES
 -- Estructura de tabla para la tabla `usuarios`
 --
 
-DROP TABLE IF EXISTS `usuarios`;
 CREATE TABLE IF NOT EXISTS `usuarios` (
   `idUsuarios` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
@@ -222,9 +293,9 @@ ALTER TABLE `pedidos`
 -- Filtros para la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
+  ADD CONSTRAINT `FK_USUARIOS_IDIOMAS` FOREIGN KEY (`idIdioma`) REFERENCES `idiomas` (`idIdioma`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `FK_USUARIOS_PAISES` FOREIGN KEY (`idPais`) REFERENCES `paises` (`idPais`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_USUARIOS_ROLES` FOREIGN KEY (`idRol`) REFERENCES `roles` (`idRol`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `FK_USUARIOS_IDIOMAS` FOREIGN KEY (`idIdioma`) REFERENCES `idiomas` (`idIdioma`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  ADD CONSTRAINT `FK_USUARIOS_ROLES` FOREIGN KEY (`idRol`) REFERENCES `roles` (`idRol`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

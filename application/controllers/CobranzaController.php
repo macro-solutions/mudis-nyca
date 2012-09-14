@@ -1,13 +1,13 @@
 <?php
 /**
- * 
+ *
  * Controller del modulo de cobranza
  * @author cfernandez
  *
  */
 class CobranzaController extends Controller
 {
-  
+
   function admin(){
     $mail = Cobranza::getEmails();
     $this->set('title','Mudis Nyca CRM - Cobranza',false);
@@ -15,9 +15,15 @@ class CobranzaController extends Controller
   }
 
   function readMail(){
-    $mail = Cobranza::getEmails();
-    echo "<pre>";
-    print_r($mail);
-    echo "</pre>";
+    $mails = Cobranza::getEmails();
+    $flag = Cobranza::savePedidos($mails);
+    echo $flag ? "OK" : "error";
+    //     echo "<pre>";
+    //     print_r($mails);
+    //     echo "</pre>";
   }
+
+//   function insert(){
+//     print_r(Cobranza::insert());
+//   }
 }
